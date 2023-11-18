@@ -6,14 +6,16 @@ apt -y install mc
 
 mkdir /tmp/folder1
 mkdir /tmp/folder2
+chmod 777 /tmp/folder1
+chmod 777 /tmp/folder2
 
 SCRIPT_PATH=/tmp/copy_script.sh
 
 echo "#!/bin/bash" > $SCRIPT_PATH
 echo "SOURCE_DIR=/tmp/folder1" >> $SCRIPT_PATH
 echo "DESTINATION_DIR=/tmp/folder2" >> $SCRIPT_PATH
-echo "if [ -z "$(find $SOURCE_DIR -maxdepth 0 -empty)" ]; then" >> $SCRIPT_PATH
-echo "find "$SOURCE_DIR" -maxdepth 1 -type f -exec mv {} "$DESTINATION_DIR" \;" >> $SCRIPT_PATH
+echo "if [ -z \"\$(find \$SOURCE_DIR -maxdepth 0 -empty)\" ]; then" >> $SCRIPT_PATH
+echo "find \"\$SOURCE_DIR\" -maxdepth 1 -type f -exec mv -t \"\$DESTINATION_DIR\" {} +" >> $SCRIPT_PATH
 echo "fi" >> $SCRIPT_PATH
 
 chmod +x $SCRIPT_PATH
@@ -23,10 +25,12 @@ SERVICE_PATH=/etc/systemd/system/lab5.service
 echo "[Unit]" > $SERVICE_PATH
 echo "Description=Move Files Daemon" >> $SERVICE_PATH
 echo "[Service]" >> $SERVICE_PATH
+echo "Type=simple" >> $SERVICE_PATH
 echo "ExecStart=$SCRIPT_PATH" >> $SERVICE_PATH
 echo "Restart=always" >> $SERVICE_PATH
 echo "[Install]" >> $SERVICE_PATH
 echo "WantedBy=multi-user.target" >> $SERVICE_PATH
 
+systemctl daemon-reload
 systemctl start lab5.service
 systemctl enable lab5.service
