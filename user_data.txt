@@ -14,9 +14,13 @@ SCRIPT_PATH=/tmp/copy_script.sh
 echo "#!/bin/bash" > $SCRIPT_PATH
 echo "SOURCE_DIR=/tmp/folder1" >> $SCRIPT_PATH
 echo "DESTINATION_DIR=/tmp/folder2" >> $SCRIPT_PATH
+echo "while true; do" >> $SCRIPT_PATH
 echo "if [ -z \"\$(find \$SOURCE_DIR -maxdepth 0 -empty)\" ]; then" >> $SCRIPT_PATH
 echo "find \"\$SOURCE_DIR\" -maxdepth 1 -type f -exec mv -t \"\$DESTINATION_DIR\" {} +" >> $SCRIPT_PATH
+echo "else" >> $SCRIPT_PATH
+echo "sleep 5" >> $SCRIPT_PATH
 echo "fi" >> $SCRIPT_PATH
+echo "done" >> $SCRIPT_PATH
 
 chmod +x $SCRIPT_PATH
 
